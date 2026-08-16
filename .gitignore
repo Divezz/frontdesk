@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+demos/
+leads.jsonl
+unanswered.jsonl
+.env

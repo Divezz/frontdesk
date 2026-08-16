@@ -1,0 +1,52 @@
+[
+  {
+    "title": "Prices",
+    "keywords": ["price", "prices", "cost", "how much", "pricing"],
+    "text": "Skin fade £18. Cut and style £16. Beard trim £10. Cut and beard together £24. Under 12s £12. We take card and cash. No extra charge for requesting a specific barber."
+  },
+  {
+    "title": "Opening hours",
+    "keywords": ["hours", "open", "closing", "sunday"],
+    "text": "Monday to Friday 9am to 7pm. Saturday 8am to 6pm. Closed Sunday. The last appointment of the day is 30 minutes before closing time."
+  },
+  {
+    "title": "Booking and walk-ins",
+    "keywords": ["book", "booking", "appointment", "walk in"],
+    "text": "Book online at northsidebarbers.co.uk/book or call 0161 496 0000. Walk-ins are welcome but Thursday to Saturday are busy, so booking ahead is recommended."
+  },
+  {
+    "title": "Location and parking",
+    "keywords": ["where", "address", "parking", "directions"],
+    "text": "42 Bury New Road, Manchester M8 8EE, two minutes from the tram stop. Free street parking after 6pm and a pay-and-display car park directly opposite the shop."
+  },
+  {
+    "title": "Cancellations",
+    "keywords": ["cancel", "reschedule", "refund"],
+    "text": "Cancel or reschedule free of charge up to 4 hours before the appointment using the link in the confirmation text. Within 4 hours we charge 50% of the service price because the slot usually cannot be refilled."
+  },
+  {
+    "title": "The team",
+    "keywords": ["barber", "staff", "team"],
+    "text": "Four barbers work in the shop: Sam, Aaron, Dee and Josh. Customers can request a specific barber when booking online at no extra cost."
+  },
+  {
+    "title": "Children",
+    "keywords": ["kids", "child", "children"],
+    "text": "Children's haircuts are welcome. Under 12s are £12. Mornings are quieter and usually easier for younger children."
+  },
+  {
+    "title": "Gift vouchers",
+    "keywords": ["gift", "voucher"],
+    "text": "Gift vouchers are available in £10, £25 and £50 amounts, bought in the shop or over the phone. Valid for 12 months from purchase."
+  },
+  {
+    "title": "Group and wedding bookings",
+    "keywords": ["wedding", "group", "party"],
+    "text": "Group and wedding bookings are available, usually arranged before opening hours so the group has the whole shop. Call 0161 496 0000 to arrange."
+  },
+  {
+    "title": "Contact",
+    "keywords": ["contact", "phone", "email", "call"],
+    "text": "Phone 0161 496 0000 or email hello@northsidebarbers.co.uk. The phone is answered during opening hours."
+  }
+]
