@@ -3,144 +3,165 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FRONTDESK — after-hours enquiry handling</title>
+<title>Northside Barbers — after hours</title>
 <style>
   /* ==========================================================
-     Two skins, one engine.
-       .shop — what the business's customers see.
-       .ops  — what's happening underneath.
-     The toggle is a sales tool: show the owner the calm version,
-     then flip it to prove the thing can't invent a price.
+     One engine, three finished looks. Set the body class to
+     t-classic, t-modern or t-vintage. Everything below the
+     palettes is shared — no layout depends on the theme.
      ========================================================== */
   :root{
-    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
     --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono","Liberation Mono",monospace;
+    --sans:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+    --heavy:"Arial Black","Segoe UI Black","Helvetica Neue",Impact,sans-serif;
+    --old:Georgia,"Iowan Old Style","Times New Roman",serif;
   }
 
-  body.shop{
-    --bg:#f4f1ea; --panel:#fffdf8; --panel-2:#faf7f0;
-    --line:#e0d8c9; --line-2:#cfc4b0;
-    --ink:#1c1a16; --dim:#6d6459; --dimmer:#9a9084;
-    --accent:#b0431d; --accent-soft:#f6ece3;
-    --ok:#4a6b3f; --warn:#a8761c;
-    --face:var(--serif); --radius:2px;
+  /* --- 1. CLASSIC — brass on charcoal, traditional shop ---- */
+  body.t-classic{
+    --bg:#151518; --panel:#1c1c20; --panel-2:#212127; --sunk:#131316;
+    --line:#2e2e36; --line-2:#3e3e48;
+    --ink:#f0eade; --dim:#a49d90; --dimmer:#736d63;
+    --accent:#c9a227; --accent-ink:#151518; --accent-soft:rgba(201,162,39,.13);
+    --warn:#c98a27; --radius:0;
+    --display:var(--heavy); --face:var(--sans);
+    --display-size:34px; --display-spacing:.005em; --display-weight:900;
+    --display-transform:uppercase; --display-lh:1.06;
   }
-  body.ops{
-    --bg:#0a0d0b; --panel:#0e120f; --panel-2:#111613;
-    --line:#1d2620; --line-2:#2a352d;
-    --ink:#d3ded4; --dim:#6d7e73; --dimmer:#4a574f;
-    --accent:#4ade80; --accent-soft:rgba(74,222,128,.09);
-    --ok:#4ade80; --warn:#f5b544;
-    --face:var(--mono); --radius:3px;
+  /* --- 2. MODERN — premium grooming, near-black on bone ---- */
+  body.t-modern{
+    --bg:#f7f6f3; --panel:#ffffff; --panel-2:#f2f0ec; --sunk:#faf9f7;
+    --line:#e2dfd8; --line-2:#cdc8be;
+    --ink:#111113; --dim:#66646a; --dimmer:#98959c;
+    --accent:#8f2d38; --accent-ink:#ffffff; --accent-soft:rgba(143,45,56,.07);
+    --warn:#9a6b1f; --radius:0;
+    --display:var(--sans); --face:var(--sans);
+    --display-size:29px; --display-spacing:.16em; --display-weight:600;
+    --display-transform:uppercase; --display-lh:1.42;
+  }
+  /* --- 3. VINTAGE — navy and barber red on cream ----------- */
+  body.t-vintage{
+    --bg:#f2eee2; --panel:#fbf8ef; --panel-2:#f6f1e4; --sunk:#efe9da;
+    --line:#d5cbb4; --line-2:#b9ac8e;
+    --ink:#1a2233; --dim:#5b6273; --dimmer:#8b8f9c;
+    --accent:#a4262c; --accent-ink:#fbf8ef; --accent-soft:rgba(164,38,44,.07);
+    --warn:#996515; --radius:0;
+    --display:var(--old); --face:var(--old);
+    --display-size:33px; --display-spacing:.01em; --display-weight:700;
+    --display-transform:none; --display-lh:1.16;
   }
 
   *{box-sizing:border-box}
   body{
     margin:0;background:var(--bg);color:var(--ink);
-    font-family:var(--face);font-size:15px;line-height:1.6;
+    font-family:var(--face);font-size:15.5px;line-height:1.62;
     -webkit-font-smoothing:antialiased;
-    transition:background .25s,color .25s;
   }
-  body.ops{font-size:13px;line-height:1.55}
+  .shell{max-width:900px;margin:0 auto;padding:26px 18px 46px}
+  body.expose .shell{max-width:1200px}
 
-  .shell{max-width:1180px;margin:0 auto;padding:26px 18px 44px}
-  body.shop .shell{max-width:940px}
-  body.shop.expose .shell{max-width:1180px}
+  /* ---------------------------------------------- chooser (temporary) */
+  .chooser{
+    display:flex;align-items:center;gap:0;margin-bottom:18px;flex-wrap:wrap;
+    font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  }
+  .chooser span{color:var(--dimmer);margin-right:12px}
+  .chooser button{
+    font:inherit;background:transparent;color:var(--dimmer);
+    border:1px solid var(--line);padding:7px 13px;cursor:pointer;
+    border-right:0;transition:.14s;
+  }
+  .chooser button:last-of-type{border-right:1px solid var(--line)}
+  .chooser button[aria-pressed="true"]{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+  .chooser button:hover{color:var(--ink)}
+  .chooser .peek{margin-left:auto;border:1px solid var(--line);border-right:1px solid var(--line)}
 
-  /* ---------------------------------------------------- switch */
-  .switch{display:flex;justify-content:flex-end;margin-bottom:14px;gap:0}
-  .switch button{
-    font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
-    background:transparent;color:var(--dimmer);border:1px solid var(--line);
-    padding:7px 13px;cursor:pointer;transition:.15s;
+  /* ---------------------------------------------- sign */
+  .sign{
+    border:1px solid var(--line);background:var(--panel);
+    padding:30px 26px 26px;margin-bottom:14px;position:relative;
   }
-  .switch button:first-child{border-right:0;border-radius:var(--radius) 0 0 var(--radius)}
-  .switch button:last-child{border-radius:0 var(--radius) var(--radius) 0}
-  .switch button[aria-pressed="true"]{
-    color:var(--accent);border-color:var(--accent);background:var(--accent-soft);
+  body.t-vintage .sign{border-width:1px;box-shadow:0 0 0 1px var(--line) inset;padding:32px 28px 28px}
+  body.t-vintage .sign::after{
+    content:"";position:absolute;inset:7px;border:1px solid var(--line);pointer-events:none;
   }
-  .switch button:hover{color:var(--ink)}
+  .sign-rule{height:1px;background:var(--line);margin:0 0 20px}
+  body.t-classic .sign-rule{background:var(--accent);height:2px;width:52px;margin-bottom:20px}
+  body.t-vintage .sign-rule{
+    background:none;border-top:1px solid var(--accent);border-bottom:1px solid var(--accent);
+    height:3px;width:76px;margin:0 auto 20px;
+  }
+  body.t-modern .sign-rule{width:34px;background:var(--accent);height:2px}
 
-  /* ---------------------------------------------------- masthead */
-  .mast{border:1px solid var(--line);background:var(--panel);border-radius:var(--radius);margin-bottom:14px}
-  .mast-top{
-    display:flex;align-items:center;gap:10px;padding:10px 14px;
-    border-bottom:1px solid var(--line);background:var(--panel-2);
-    font-family:var(--mono);font-size:11.5px;
+  .shopname{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;
+    color:var(--dim);margin-bottom:16px;display:flex;align-items:center;gap:11px;flex-wrap:wrap;
   }
-  .lamps{display:flex;gap:6px}
-  body.shop .lamps{display:none}
-  .lamp{width:9px;height:9px;border-radius:50%;background:var(--line-2)}
-  .lamp.on{background:var(--accent);box-shadow:0 0 7px var(--accent-soft)}
-  .path{color:var(--dim)}
-  .path b{color:var(--ink);font-weight:600}
-  body.shop .path{font-family:var(--face);font-size:13px;letter-spacing:.02em}
-  .duty{
-    margin-left:auto;font-size:10.5px;letter-spacing:.1em;color:var(--accent);
-    display:flex;align-items:center;gap:7px;text-transform:uppercase;
+  .shopname b{color:var(--ink);font-weight:400;letter-spacing:.2em}
+  .openflag{
+    margin-left:auto;color:var(--accent);display:flex;align-items:center;gap:7px;letter-spacing:.14em;
   }
-  .pulse{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2.4s ease-in-out infinite}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.28}}
+  .pulse{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2.6s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
 
-  .mast-body{padding:22px 18px 20px}
-  body.ops .mast-body{padding:18px 16px 16px}
-  .kicker{
-    font-family:var(--mono);font-size:10.5px;letter-spacing:.15em;color:var(--dimmer);
-    text-transform:uppercase;margin-bottom:13px;
-  }
-  .mast-body h1{
-    margin:0 0 11px;letter-spacing:-.015em;font-weight:600;
-    font-size:30px;line-height:1.22;max-width:22ch;
-  }
-  body.ops .mast-body h1{font-size:20px;max-width:none;line-height:1.35}
-  .mast-body p{margin:0;color:var(--dim);max-width:64ch;font-size:15px;line-height:1.72}
-  body.ops .mast-body p{font-size:12.5px;line-height:1.7;max-width:74ch}
-  .cursor{
-    display:inline-block;width:8px;height:15px;background:var(--accent);
-    vertical-align:-2px;margin-left:4px;animation:blink 1.1s steps(1) infinite;
-  }
-  body.shop .cursor{display:none}
-  @keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
+  body.t-vintage .sign{text-align:center}
+  body.t-vintage .shopname{justify-content:center}
+  body.t-vintage .openflag{margin-left:0}
 
-  /* ---------------------------------------------------- panes */
-  .panes{display:grid;grid-template-columns:1fr;gap:12px}
-  body.expose .panes{grid-template-columns:1.05fr .95fr}
-  @media(max-width:880px){body.expose .panes{grid-template-columns:1fr}}
+  h1{
+    margin:0 0 14px;
+    font-family:var(--display);
+    font-size:var(--display-size);
+    font-weight:var(--display-weight);
+    letter-spacing:var(--display-spacing);
+    text-transform:var(--display-transform);
+    line-height:var(--display-lh);
+    max-width:19ch;
+  }
+  body.t-vintage h1{margin-left:auto;margin-right:auto}
+  body.t-modern h1{max-width:24ch}
+  .sub{margin:0;color:var(--dim);max-width:60ch;font-size:15px;line-height:1.74}
+  body.t-vintage .sub{margin-left:auto;margin-right:auto}
 
-  .pane{border:1px solid var(--line);background:var(--panel);border-radius:var(--radius);display:flex;flex-direction:column}
+  /* ---------------------------------------------- panes */
+  .panes{display:grid;grid-template-columns:1fr;gap:14px}
+  body.expose .panes{grid-template-columns:1.08fr .92fr}
+  @media(max-width:900px){body.expose .panes{grid-template-columns:1fr}}
+
+  .pane{border:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column}
   #tracepane{display:none}
   body.expose #tracepane{display:flex}
 
   .pane-head{
-    display:flex;align-items:center;gap:8px;padding:9px 14px;
+    display:flex;align-items:center;gap:9px;padding:11px 16px;
     border-bottom:1px solid var(--line);background:var(--panel-2);
-    font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.17em;
     color:var(--dimmer);text-transform:uppercase;
   }
-  .pane-head .tag{margin-left:auto;letter-spacing:.05em;text-transform:none;font-size:11px}
+  .pane-head .tag{margin-left:auto;letter-spacing:.12em}
 
-  /* ---------------------------------------------------- chat */
-  .log{height:400px;overflow-y:auto;padding:18px 16px;scroll-behavior:smooth}
-  body.ops .log{height:392px;padding:14px 13px}
-
-  .msg{margin-bottom:15px;display:flex;gap:10px;align-items:flex-start}
+  /* ---------------------------------------------- chat */
+  .log{height:420px;overflow-y:auto;padding:20px 18px;scroll-behavior:smooth;background:var(--sunk)}
+  .msg{margin-bottom:17px}
   .who{
-    flex:none;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;
-    padding-top:5px;width:62px;text-align:right;text-transform:uppercase;color:var(--dimmer);
+    font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--dimmer);margin-bottom:6px;
   }
   .msg.desk .who{color:var(--accent)}
-  .body{flex:1;white-space:pre-wrap;word-wrap:break-word;font-size:15px;line-height:1.62}
-  body.ops .body{font-size:13px;border-left:1px solid var(--line-2);padding-left:11px;line-height:1.55}
-  body.shop .msg.desk .body{
-    background:var(--panel-2);border:1px solid var(--line);border-left:2px solid var(--accent);
-    padding:11px 14px;border-radius:var(--radius);
+  .body{white-space:pre-wrap;word-wrap:break-word;font-size:15px;line-height:1.66}
+  .msg.desk .body{
+    background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);
+    padding:14px 16px;
   }
-  body.shop .msg.cust .body{
-    background:transparent;border:1px dashed var(--line-2);
-    padding:11px 14px;border-radius:var(--radius);color:var(--dim);font-style:italic;
+  .msg.cust{text-align:right}
+  .msg.cust .body{
+    display:inline-block;text-align:left;max-width:80%;
+    background:transparent;border:1px dashed var(--line-2);padding:11px 15px;color:var(--dim);
   }
-  .src{margin-top:9px;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;
-       color:var(--dimmer);text-transform:uppercase}
+  .src{
+    margin-top:11px;padding-top:9px;border-top:1px solid var(--line);
+    font-family:var(--mono);font-size:9px;letter-spacing:.15em;color:var(--dimmer);text-transform:uppercase;
+  }
   .src b{color:var(--dim);font-weight:400}
 
   .dots{display:inline-flex;gap:5px;align-items:center;height:20px}
@@ -149,114 +170,106 @@
   .dots i:nth-child(3){animation-delay:.32s}
   @keyframes bl{0%,60%,100%{opacity:.25}30%{opacity:1}}
 
-  .chips{display:flex;flex-wrap:wrap;gap:7px;padding:0 16px 13px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;padding:14px 18px 0;background:var(--sunk)}
   .chip{
-    font-family:var(--mono);font-size:11px;color:var(--dim);cursor:pointer;
-    background:transparent;border:1px solid var(--line-2);border-radius:var(--radius);
-    padding:6px 11px;transition:.13s;letter-spacing:.02em;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;color:var(--dim);cursor:pointer;
+    background:var(--panel);border:1px solid var(--line);padding:8px 12px;transition:.14s;
+    text-transform:uppercase;
   }
-  .chip:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
-  body.ops .chip::before{content:"› ";color:var(--dimmer)}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
 
-  .composer{display:flex;align-items:center;gap:9px;padding:12px 14px;border-top:1px solid var(--line)}
-  .prompt{color:var(--accent);flex:none;font-family:var(--mono)}
-  body.shop .prompt{display:none}
+  .composer{display:flex;align-items:center;gap:10px;padding:14px 16px;border-top:1px solid var(--line);background:var(--panel)}
   .composer input{
-    flex:1;background:transparent;border:0;outline:none;color:var(--ink);
-    font-family:var(--face);font-size:15px;padding:3px 0;
+    flex:1;background:var(--sunk);border:1px solid var(--line);color:var(--ink);
+    font-family:var(--face);font-size:15px;padding:12px 14px;outline:none;
   }
-  body.ops .composer input{font-size:13px}
-  body.shop .composer input{
-    border:1px solid var(--line);border-radius:var(--radius);padding:10px 12px;background:var(--bg);
-  }
-  body.shop .composer input:focus{border-color:var(--accent)}
+  .composer input:focus{border-color:var(--accent)}
   .composer input::placeholder{color:var(--dimmer)}
   .composer button{
-    background:transparent;border:1px solid var(--line-2);color:var(--dim);
-    font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;padding:8px 14px;
-    border-radius:var(--radius);cursor:pointer;transition:.13s;text-transform:uppercase;
+    background:var(--accent);border:1px solid var(--accent);color:var(--accent-ink);
+    font-family:var(--mono);font-size:10px;letter-spacing:.19em;padding:12px 20px;
+    cursor:pointer;transition:.14s;text-transform:uppercase;
   }
-  .composer button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
-  .composer button:disabled{opacity:.35;cursor:default}
+  .composer button:disabled{opacity:.4;cursor:default}
+  .composer button:hover:not(:disabled){opacity:.86}
 
-  /* ---------------------------------------------------- trace */
-  .trace{height:392px;overflow-y:auto;padding:12px;font-family:var(--mono);
-         font-size:11.5px;line-height:1.75;scroll-behavior:smooth}
-  .tl{display:flex;gap:9px}
+  /* ---------------------------------------------- ledger / trace */
+  .trace{height:420px;overflow-y:auto;padding:14px 15px;font-family:var(--mono);
+         font-size:11px;line-height:1.85;background:var(--sunk);scroll-behavior:smooth}
+  .tl{display:flex;gap:10px}
   .ts{color:var(--dimmer);flex:none}
-  .lvl{flex:none;width:34px}
-  .lvl.ok{color:var(--ok)}
-  .lvl.info{color:var(--dim)}
+  .lvl{flex:none;width:32px;color:var(--dim)}
+  .lvl.ok,.lvl.hit{color:var(--accent)}
   .lvl.warn{color:var(--warn)}
-  .lvl.hit{color:var(--accent)}
   .tx{color:var(--dim);word-break:break-word}
   .tx b{color:var(--ink);font-weight:400}
   .tx .n{color:var(--accent)}
   .bar{display:inline-block;color:var(--line-2);letter-spacing:-1px}
   .bar span{color:var(--accent)}
 
-  /* ---------------------------------------------------- strip */
+  /* ---------------------------------------------- strip */
   .strip{
     display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);
-    border:1px solid var(--line);border-radius:var(--radius);margin-top:12px;overflow:hidden;
+    border:1px solid var(--line);margin-top:14px;
   }
-  .cell{background:var(--panel);padding:12px 14px}
-  .cell b{display:block;font-size:20px;font-weight:500;letter-spacing:-.02em}
-  .cell span{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:var(--dimmer);text-transform:uppercase}
+  .cell{background:var(--panel);padding:15px 16px}
+  .cell b{display:block;font-family:var(--display);font-size:23px;font-weight:var(--display-weight);letter-spacing:-.01em}
+  body.t-modern .cell b{font-size:21px;letter-spacing:.02em}
+  .cell span{font-family:var(--mono);font-size:9px;letter-spacing:.17em;color:var(--dimmer);text-transform:uppercase}
 
-  /* ---------------------------------------------------- captured */
-  .caught{margin-top:12px;border:1px solid var(--line);background:var(--panel);border-radius:var(--radius)}
-  .caught .inner{padding:14px 16px}
-  .none{color:var(--dimmer);font-size:13.5px}
-  body.ops .none{font-size:12px}
-  .card{border-left:2px solid var(--warn);padding:3px 0 3px 12px;margin-bottom:12px}
-  .card b{display:block;font-weight:600;font-size:14.5px}
-  .card span{color:var(--dim);font-size:13px}
-  body.ops .card b{font-size:12.5px;font-weight:500}
-  body.ops .card span{font-size:11.5px}
+  /* ---------------------------------------------- captured */
+  .caught{margin-top:14px;border:1px solid var(--line);background:var(--panel)}
+  .caught .inner{padding:16px 18px}
+  .none{color:var(--dimmer);font-size:14px}
+  .card{border-left:3px solid var(--warn);padding:4px 0 4px 14px;margin-bottom:14px}
+  .card b{display:block;font-weight:600;font-size:15px}
+  .card span{color:var(--dim);font-size:13.5px}
 
-  .lead-form{border:1px dashed var(--line-2);border-radius:var(--radius);padding:13px;margin-top:9px}
-  .lead-form label{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;
-                   color:var(--dimmer);margin-bottom:5px;text-transform:uppercase}
+  .lead-form{border:1px dashed var(--line-2);padding:15px;margin-top:12px}
+  .lead-form label{
+    display:block;font-family:var(--mono);font-size:9px;letter-spacing:.17em;
+    color:var(--dimmer);margin-bottom:6px;text-transform:uppercase;
+  }
   .lead-form input{
-    width:100%;background:var(--bg);border:1px solid var(--line-2);border-radius:var(--radius);
-    color:var(--ink);font-family:var(--face);font-size:14px;padding:8px 10px;outline:none;margin-bottom:10px;
+    width:100%;background:var(--sunk);border:1px solid var(--line);color:var(--ink);
+    font-family:var(--face);font-size:14.5px;padding:10px 12px;outline:none;margin-bottom:12px;
   }
-  body.ops .lead-form input{font-family:var(--mono);font-size:12.5px}
   .lead-form input:focus{border-color:var(--accent)}
   .lead-form button{
-    background:transparent;border:1px solid var(--accent);color:var(--accent);
-    font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;padding:8px 15px;
-    border-radius:var(--radius);cursor:pointer;text-transform:uppercase;
+    background:var(--accent);border:1px solid var(--accent);color:var(--accent-ink);
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;padding:11px 18px;
+    cursor:pointer;text-transform:uppercase;
   }
-  .lead-form button:hover{background:var(--accent-soft)}
 
-  .foot{margin-top:18px;font-family:var(--mono);font-size:10.5px;color:var(--dimmer);
-        line-height:1.9;border-top:1px solid var(--line);padding-top:14px;letter-spacing:.02em}
+  .foot{
+    margin-top:20px;font-family:var(--mono);font-size:9.5px;color:var(--dimmer);
+    line-height:2;border-top:1px solid var(--line);padding-top:15px;letter-spacing:.09em;text-transform:uppercase;
+  }
   .foot b{color:var(--dim);font-weight:400}
 </style>
 </head>
-<body class="shop">
+<body class="t-classic">
 <div class="shell">
 
-  <div class="switch">
-    <button id="t-shop" aria-pressed="true">Shopfront</button>
-    <button id="t-ops" aria-pressed="false">Under the hood</button>
+  <!-- Remove this row once you've picked a look. -->
+  <div class="chooser">
+    <span>Look</span>
+    <button data-theme="t-classic" aria-pressed="true">Classic</button>
+    <button data-theme="t-modern" aria-pressed="false">Modern</button>
+    <button data-theme="t-vintage" aria-pressed="false">Vintage</button>
+    <button class="peek" id="peek" aria-pressed="false">Show the workings</button>
   </div>
 
-  <div class="mast">
-    <div class="mast-top">
-      <div class="lamps"><i class="lamp on"></i><i class="lamp"></i><i class="lamp"></i></div>
-      <div class="path" id="pathline">frontdesk@<b id="host">northside</b>:~$</div>
-      <div class="duty"><span class="pulse"></span><span id="duty">ON DUTY 18:00–09:00</span></div>
+  <div class="sign">
+    <div class="shopname">
+      <b id="shopname">Northside Barbers</b>
+      <span class="openflag"><span class="pulse"></span><span id="duty">Answering 18:00–09:00</span></span>
     </div>
-    <div class="mast-body">
-      <div class="kicker">After-hours enquiry handling</div>
-      <h1 id="headline">Most enquiries arrive when nobody's there to answer them.<em class="cursor"></em></h1>
-      <p id="subline">It answers from your information only — your prices, your hours, your policies — and
-never from anything else. If the answer isn't in what you've given it, it says so and takes the
-customer's number instead of inventing one.</p>
-    </div>
+    <div class="sign-rule"></div>
+    <h1 id="headline">The chair's empty at 10pm. The questions aren't.</h1>
+    <p class="sub" id="subline">Answers your customers out of hours — prices, opening times, booking, parking —
+using only what you've told it. If it doesn't know, it says so and takes their number,
+so the enquiry lands with you instead of going to the shop down the road.</p>
   </div>
 
   <div class="panes">
@@ -268,14 +281,13 @@ customer's number instead of inventing one.</p>
       <div class="log" id="chatlog"></div>
       <div class="chips" id="chips"></div>
       <form class="composer" id="composer" autocomplete="off">
-        <span class="prompt">›</span>
         <input id="input" placeholder="Ask it something…" aria-label="Message">
-        <button type="submit" id="send">Send</button>
+        <button type="submit" id="send">Ask</button>
       </form>
     </div>
 
     <div class="pane" id="tracepane">
-      <div class="pane-head"><span>Trace</span><span class="tag">live · not simulated</span></div>
+      <div class="pane-head"><span>The workings</span><span class="tag">live, not simulated</span></div>
       <div class="trace" id="trace"></div>
     </div>
   </div>
@@ -283,21 +295,20 @@ customer's number instead of inventing one.</p>
   <div class="strip">
     <div class="cell"><b id="s-enq">0</b><span>Enquiries</span></div>
     <div class="cell"><b id="s-ans">0</b><span>Answered</span></div>
-    <div class="cell"><b id="s-cap">0</b><span>Captured</span></div>
-    <div class="cell"><b id="s-lat">—</b><span>Median match</span></div>
+    <div class="cell"><b id="s-cap">0</b><span>Numbers taken</span></div>
+    <div class="cell"><b id="s-lat">—</b><span>Time to answer</span></div>
   </div>
 
   <div class="caught">
-    <div class="pane-head"><span>Captured enquiries</span><span class="tag">→ your inbox</span></div>
+    <div class="pane-head"><span>Enquiries passed to you</span><span class="tag">→ your phone</span></div>
     <div class="inner" id="caught">
-      <div class="none">Nothing captured yet. Ask it something you've never put in writing — that's the case that matters.</div>
+      <div class="none">Nothing yet. Ask it something you've never written down anywhere — that's the one that matters.</div>
     </div>
   </div>
 
   <p class="foot">
-    Runs entirely in this browser — no server, no internet, nothing to install. The matching engine is
-    the real one, running on your machine.<br>
-    <b>FRONTDESK · built by Daniel · Manchester</b>
+    Runs in this browser — nothing to install, works with no signal.<br>
+    <b>Built by Daniel · Manchester</b>
   </p>
 </div>
 
@@ -310,63 +321,63 @@ customer's number instead of inventing one.</p>
 const CONFIG = {
   "business": "Northside Barbers",
   "host": "northside",
-  "duty": "ON DUTY 18:00–09:00",
+  "duty": "Answering 18:00–09:00",
   "channels": "web · sms · instagram",
-  "greeting": "Northside Barbers is closed right now — but I can still help. Ask me about prices, opening hours, booking, or anything else about the shop.",
+  "greeting": "The shop's shut for the night, but I can still help. Ask me about prices, opening times, booking or where to park.",
   "suggested": ["how much is a skin fade", "are you open sunday", "can i get in tomorrow", "do you do tattoos"],
   "knowledge": [
     {
       "id": "pricing",
       "k": ["price", "prices", "cost", "how much", "pricing", "charge", "rate", "rates", "fee", "fade", "trim"],
-      "a": "Current prices:\n\n  skin fade ......... £18\n  cut & style ....... £16\n  beard trim ........ £10\n  cut + beard ....... £24\n  under 12s ......... £12\n\nCard and cash both fine, and there's no extra charge for requesting a particular barber."
+      "a": "Current prices:\n\n  Skin fade ............ £18\n  Cut & style .......... £16\n  Beard trim ........... £10\n  Cut + beard .......... £24\n  Under 12s ............ £12\n\nCard and cash both fine, and no extra charge for asking for a particular barber."
     },
     {
       "id": "hours",
       "k": ["hour", "hours", "open", "opening", "close", "closing", "time", "times", "sunday", "monday", "saturday", "weekend", "late"],
-      "a": "Opening hours:\n\n  mon–fri ........... 9am – 7pm\n  saturday .......... 8am – 6pm\n  sunday ............ closed\n\nLast appointment goes in 30 minutes before we close."
+      "a": "Opening hours:\n\n  Mon–Fri .............. 9am – 7pm\n  Saturday ............. 8am – 6pm\n  Sunday ............... closed\n\nLast appointment goes in half an hour before we close."
     },
     {
       "id": "booking",
       "k": ["book", "booking", "appointment", "reserve", "walk in", "walkin", "slot", "available", "availability", "tomorrow", "spare", "get in", "fit me in", "squeeze", "come in"],
-      "a": "Book online at northsidebarbers.co.uk/book, or call 0161 496 0000.\n\nWalk-ins are welcome, but Thursday to Saturday fill up — worth booking ahead for those."
+      "a": "Book online at northsidebarbers.co.uk/book, or ring 0161 496 0000.\n\nWalk-ins are welcome, but Thursday to Saturday fill up — worth booking ahead for those."
     },
     {
       "id": "location",
       "k": ["where", "location", "address", "find", "parking", "park", "directions", "postcode", "tram", "bus"],
-      "a": "42 Bury New Road, Manchester M8 8EE — about two minutes from the tram stop.\n\nStreet parking is free after 6pm, and there's a pay-and-display directly opposite."
+      "a": "42 Bury New Road, Manchester M8 8EE — two minutes from the tram stop.\n\nStreet parking is free after 6pm, and there's a pay-and-display directly opposite."
     },
     {
       "id": "cancellation",
       "k": ["cancel", "cancellation", "refund", "reschedule", "move", "change", "miss", "missed", "no show"],
-      "a": "Cancel or move an appointment free up to 4 hours before, using the link in your confirmation text.\n\nInside 4 hours we ask for half the service price, because the slot usually can't be refilled that late."
+      "a": "Cancel or move your appointment free up to 4 hours before, using the link in your confirmation text.\n\nInside 4 hours we ask for half the price of the service, because the slot usually can't be filled that late."
     },
     {
       "id": "team",
       "k": ["barber", "barbers", "who", "staff", "team", "stylist", "request", "specific"],
-      "a": "Four barbers in the shop: Sam, Aaron, Dee and Josh. You can request whoever you like when booking online — no extra charge."
+      "a": "Four barbers in the shop: Sam, Aaron, Dee and Josh. Ask for whoever you like when you book — no extra charge."
     },
     {
       "id": "children",
       "k": ["kid", "kids", "child", "children", "son", "family", "toddler", "under 12"],
-      "a": "Yes — kids are welcome. Under 12s are £12. Mornings tend to be quieter if your little one isn't keen on the clippers."
+      "a": "Kids are welcome. Under 12s are £12. Mornings are quieter if your little one isn't keen on the clippers."
     },
     {
       "id": "vouchers",
       "k": ["gift", "voucher", "vouchers", "present", "card"],
-      "a": "Gift vouchers come in £10, £25 and £50. Available in the shop or over the phone, valid for 12 months."
+      "a": "Gift vouchers come in £10, £25 and £50. In the shop or over the phone, valid for a year."
     },
     {
       "id": "groups",
       "k": ["wedding", "group", "party", "stag", "event", "groom"],
-      "a": "We do weddings and group bookings, usually before opening so you get the shop to yourselves. Ring 0161 496 0000 and we'll sort a time."
+      "a": "We do weddings and groups, usually before opening so you've got the shop to yourselves. Ring 0161 496 0000 and we'll sort a time."
     },
     {
       "id": "contact",
       "k": ["contact", "phone", "number", "call", "email", "speak", "human", "owner", "manager", "complain", "complaint"],
-      "a": "Shop phone is 0161 496 0000, or email hello@northsidebarbers.co.uk. Someone's on the phone during opening hours."
+      "a": "The shop phone is 0161 496 0000, or email hello@northsidebarbers.co.uk. Someone picks up during opening hours."
     }
   ],
-  "fallback": "That one isn't in what the shop has given me, and I'd rather not guess at it.\n\nLeave your name and a number and I'll pass it straight to the team — they'll come back to you when they open."
+  "fallback": "That's not in what the shop's given me, and I'd rather not guess at it.\n\nLeave your name and number and I'll pass it straight to them — they'll come back to you when they open."
 };
 // <<<END CONFIG>>>
 
@@ -378,8 +389,8 @@ const STOP = new Set(("the a an is are do does did i you we to of for and or in 
 const norm = s => s.toLowerCase().replace(/[^a-z0-9\s'-]/g, " ");
 const toks = s => norm(s).split(/\s+/).filter(w => w && !STOP.has(w));
 
-/* Document frequency: a keyword present in every entry ("book" in a salon)
-   carries less signal than a rare one. */
+/* Document frequency: a keyword in every entry ("book" in a salon) carries
+   less signal than a rare one. */
 const DF = (() => {
   const df = {};
   for (const e of CONFIG.knowledge) for (const k of new Set(e.k.map(x => x.toLowerCase()))) df[k] = (df[k] || 0) + 1;
@@ -434,29 +445,26 @@ const caught  = document.getElementById("caught");
 const leads = [], latencies = [];
 let enquiries = 0, answered = 0, busy = false;
 
-document.getElementById("host").textContent = CONFIG.host;
+document.getElementById("shopname").textContent = CONFIG.business;
 document.getElementById("duty").textContent = CONFIG.duty;
 document.getElementById("chan").textContent = CONFIG.channels;
+document.title = CONFIG.business + " — after hours";
 
-/* ---- theme -------------------------------------------------------- */
-const bShop = document.getElementById("t-shop");
-const bOps  = document.getElementById("t-ops");
+/* ---- look chooser (delete this block once a look is chosen) -------- */
+const themes = [...document.querySelectorAll(".chooser [data-theme]")];
+let current = "t-classic", exposed = false;
 
-function setTheme(mode) {
-  const ops = mode === "ops";
-  document.body.className = ops ? "ops expose" : "shop";
-  bShop.setAttribute("aria-pressed", String(!ops));
-  bOps.setAttribute("aria-pressed", String(ops));
-  document.getElementById("pathline").innerHTML = ops
-    ? 'frontdesk@<b>' + esc(CONFIG.host) + '</b>:~$'
-    : '<b>' + esc(CONFIG.business) + '</b>';
-  document.getElementById("viewlabel").textContent = ops ? "Customer view" : "What your customer sees";
-  input.placeholder = ops ? "type a customer question…" : "Ask it something…";
+function paint() {
+  document.body.className = current + (exposed ? " expose" : "");
+  themes.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.theme === current)));
+  peek.setAttribute("aria-pressed", String(exposed));
+  peek.textContent = exposed ? "Hide the workings" : "Show the workings";
 }
-bShop.addEventListener("click", () => setTheme("shop"));
-bOps.addEventListener("click", () => setTheme("ops"));
+themes.forEach(b => b.addEventListener("click", () => { current = b.dataset.theme; paint(); }));
+const peek = document.getElementById("peek");
+peek.addEventListener("click", () => { exposed = !exposed; paint(); });
 
-/* ---- trace clock: a plausible after-hours evening ------------------ */
+/* ---- trace clock: a plausible evening ----------------------------- */
 let clock = new Date(2000, 0, 1, 22, 41, 3);
 function stamp() {
   clock = new Date(clock.getTime() + (900 + Math.floor(performance.now() % 400)));
@@ -476,19 +484,19 @@ function trace(level, html) {
 }
 
 function bar(score, max) {
-  const filled = Math.max(1, Math.round((score / Math.max(max, 0.001)) * 14));
-  return `<span class="bar"><span>${"█".repeat(filled)}</span>${"░".repeat(14 - filled)}</span>`;
+  const filled = Math.max(1, Math.round((score / Math.max(max, 0.001)) * 12));
+  return `<span class="bar"><span>${"█".repeat(filled)}</span>${"░".repeat(12 - filled)}</span>`;
 }
 
 function msg(who, text, source) {
   const d = document.createElement("div");
   d.className = "msg " + (who === "customer" ? "cust" : "desk");
-  d.innerHTML = `<div class="who">${who === "customer" ? "customer" : "frontdesk"}</div><div class="body"></div>`;
+  d.innerHTML = `<div class="who">${who === "customer" ? "Customer" : "The shop"}</div><div class="body"></div>`;
   d.querySelector(".body").textContent = text;
   if (source) {
     const s = document.createElement("div");
     s.className = "src";
-    s.innerHTML = `answered from <b>${esc(source)}</b> · checked against your own information`;
+    s.innerHTML = `From your <b>${esc(source)}</b> · nothing invented`;
     d.querySelector(".body").appendChild(s);
   }
   chatlog.appendChild(d);
@@ -499,7 +507,7 @@ function msg(who, text, source) {
 function thinking() {
   const d = document.createElement("div");
   d.className = "msg desk";
-  d.innerHTML = `<div class="who">frontdesk</div><div class="body"><span class="dots"><i></i><i></i><i></i></span></div>`;
+  d.innerHTML = `<div class="who">The shop</div><div class="body"><span class="dots"><i></i><i></i><i></i></span></div>`;
   chatlog.appendChild(d);
   chatlog.scrollTop = chatlog.scrollHeight;
   return d;
@@ -511,31 +519,31 @@ function refreshStats() {
   document.getElementById("s-cap").textContent = leads.length;
   if (latencies.length) {
     const sorted = [...latencies].sort((a, b) => a - b);
-    document.getElementById("s-lat").textContent = sorted[Math.floor(sorted.length / 2)].toFixed(2) + "ms";
+    document.getElementById("s-lat").textContent = sorted[Math.floor(sorted.length / 2)].toFixed(1) + "ms";
   }
 }
 
 function leadForm(question) {
   const wrap = document.createElement("div");
   wrap.className = "msg desk";
-  wrap.innerHTML = `<div class="who"></div>
+  wrap.innerHTML = `<div class="who">The shop</div>
     <div class="body" style="border-left-color:var(--warn)">
       <div class="lead-form">
-        <label>Name</label><input data-f="name" placeholder="e.g. Daniel">
+        <label>Your name</label><input data-f="name" placeholder="e.g. Daniel">
         <label>Phone or email</label><input data-f="contact" placeholder="so they can reach you">
-        <button type="button">Pass to the team</button>
+        <button type="button">Pass it on</button>
       </div>
     </div>`;
   const name = wrap.querySelector('[data-f="name"]');
   const contact = wrap.querySelector('[data-f="contact"]');
   wrap.querySelector("button").addEventListener("click", () => {
-    if (!contact.value.trim()) { contact.style.borderColor = "#c0392b"; contact.focus(); return; }
+    if (!contact.value.trim()) { contact.style.borderColor = "#b3261e"; contact.focus(); return; }
     leads.push({ name: name.value.trim() || "not given", contact: contact.value.trim(), question });
     wrap.remove();
     renderLeads();
     refreshStats();
-    trace("ok", `enquiry captured → queued for <b>the owner's inbox</b>`);
-    reply("Got it — that's with the team now. They'll come back to you when the shop opens.", null);
+    trace("ok", `enquiry captured → sent to <b>the shop</b>`);
+    reply("Got it — that's with the shop now. They'll come back to you when they open.", null);
   });
   chatlog.appendChild(wrap);
   chatlog.scrollTop = chatlog.scrollHeight;
@@ -558,7 +566,7 @@ function reply(text, source, after) {
   const t = thinking();
   setTimeout(() => {
     t.remove();
-    msg("frontdesk", text, source);
+    msg("shop", text, source);
     busy = false; sendBtn.disabled = false;
     if (after) after();
     input.focus();
@@ -575,21 +583,21 @@ function ask(text) {
   const r = resolve(text);
   latencies.push(r.ms);
 
-  trace("info", `enquiry received · <b>${esc(text.slice(0, 46))}</b>`);
-  trace("info", `tokenised → [${toks(text).map(esc).join(", ") || "—"}]`);
+  trace("info", `enquiry · <b>${esc(text.slice(0, 44))}</b>`);
+  trace("info", `words used → [${toks(text).map(esc).join(", ") || "—"}]`);
   r.ranked.slice(0, 3).forEach((c, i) => {
     trace(i === 0 && r.hit ? "hit" : "info",
-      `${bar(c.score, r.ranked[0].score)} <b>${esc(c.entry.id)}</b> <span class="n">${c.score.toFixed(2)}</span> · via ${esc(c.matched.slice(0, 3).join(", "))}`);
+      `${bar(c.score, r.ranked[0].score)} <b>${esc(c.entry.id)}</b> <span class="n">${c.score.toFixed(2)}</span> · ${esc(c.matched.slice(0, 3).join(", "))}`);
   });
-  if (!r.ranked.length) trace("info", `no candidates scored above zero`);
+  if (!r.ranked.length) trace("info", `nothing in the shop's notes came close`);
 
   if (r.hit) {
     answered++;
-    trace("ok", `threshold ${THRESHOLD.toFixed(1)} cleared → answering from <b>${esc(r.source)}</b> · ${r.ms.toFixed(2)}ms`);
+    trace("ok", `confident enough → answering from <b>${esc(r.source)}</b> · ${r.ms.toFixed(1)}ms`);
     reply(r.answer, r.source);
   } else {
-    trace("warn", `best score below threshold ${THRESHOLD.toFixed(1)} → refusing to guess`);
-    trace("warn", `logged to <b>unanswered.jsonl</b> → the owner's monthly report`);
+    trace("warn", `not confident enough → refusing to guess`);
+    trace("warn", `saved to the shop's monthly list of things to answer`);
     reply(r.answer, null, () => leadForm(text));
   }
   refreshStats();
@@ -608,12 +616,15 @@ CONFIG.suggested.forEach(q => {
   chipsEl.appendChild(b);
 });
 
-trace("ok", `frontdesk booted · knowledge base <b>${CONFIG.knowledge.length}</b> entries loaded`);
-trace("info", `business <b>${esc(CONFIG.business)}</b> · channels ${esc(CONFIG.channels)}`);
-trace("ok", `on duty — waiting for enquiries`);
+trace("ok", `on duty · ${CONFIG.knowledge.length} things the shop has told me`);
+trace("info", `${esc(CONFIG.business)} · ${esc(CONFIG.channels)}`);
 
-setTheme(new URLSearchParams(location.search).get("view") === "ops" ? "ops" : "shop");
-msg("frontdesk", CONFIG.greeting);
+const params = new URLSearchParams(location.search);
+if (params.get("look")) current = "t-" + params.get("look");
+if (params.get("workings") === "1") exposed = true;
+paint();
+
+msg("shop", CONFIG.greeting);
 refreshStats();
 </script>
 </body>
